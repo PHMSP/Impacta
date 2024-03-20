@@ -77,7 +77,7 @@ WSGI_APPLICATION = 'projeto_adocao_cachorro.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
-        'NAME': 'adocao',
+        'NAME': 'postgres',
         'USER': 'cachorro',
         'PASSWORD': 'pedro',
         'HOST': 'localhost',  # ou o endereço IP do banco de dados
