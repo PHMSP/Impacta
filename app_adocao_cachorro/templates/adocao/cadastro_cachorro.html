@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cadastro de Cachorro</title>
+</head>
+
+<body>
+    <h1>Cadastro de Cachorro</h1>
+
+    {% if error_message %}
+    <p>{{ error_message }}</p>
+    {% else %}
+    <p>Nenhuma mensagem de erro disponível.</p>
+    {% endif %}
+
+    <form method="POST">
+        {% csrf_token %}
+        <label for="idade">Idade:</label><br>
+        <input type="text" id="idade" name="idade"><br>
+        <label for="estado">Estado:</label><br>
+        <input type="text" id="estado" name="estado"><br>
+        <label for="cidade">Cidade:</label><br>
+        <input type="text" id="cidade" name="cidade"><br>
+        <label for="raca">Raça:</label><br>
+        <input type="text" id="raca" name="raca"><br>
+        <label for="genero">Gênero:</label><br>
+        <input type="text" id="genero" name="genero"><br>
+        <label for="descricao">Descrição:</label><br>
+        <textarea id="descricao" name="descricao"></textarea><br><br>
+        <label for="email_doador">Email do Doador:</label><br>
+        <input type="email" id="email_doador" name="email_doador"><br><br>
+        <button type="submit">Cadastrar</button>
+    </form>
+
+    <a href="{% url 'home' %}" class="btn">Voltar para a página inicial</a>
+</body>
+
+</html>

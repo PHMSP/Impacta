@@ -4,6 +4,7 @@ from app_adocao_cachorro import views
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('',views.home,name='home'),
+    path('', views.home, name='home'),
     path('cadastro_doador/', views.cadastro_doador, name='cadastro_doador'),
+    path('cadastro_cachorro/', views.cadastro_cachorro, name='cadastro_cachorro'),
 ]

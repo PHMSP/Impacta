@@ -7,3 +7,15 @@ class Doador(models.Model):
     
     def __str__(self):
         return self.nome
+
+class Cachorro(models.Model):
+    doador = models.ForeignKey(Doador, on_delete=models.CASCADE)
+    idade = models.IntegerField()
+    estado = models.CharField(max_length=100)
+    cidade = models.CharField(max_length=100)
+    raca = models.CharField(max_length=100)
+    genero = models.CharField(max_length=10)
+    descricao = models.TextField()
+
+    def __str__(self):
+        return self.nome
