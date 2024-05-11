@@ -45,3 +45,14 @@ def cadastro_cachorro(request):
         return redirect('home')
     else:
         return render(request, 'adocao/cadastro_cachorro.html')
+    
+def lista_cachorro(request):
+    # Obtém os parâmetros de filtro do request
+    estado = request.GET.get('estado')
+    cidade = request.GET.get('cidade')
+
+    # Filtra os cachorros com base nos parâmetros de filtro
+    cachorros = Cachorro.objects.filter(estado=estado, cidade=cidade)
+
+    # Renderiza o template com os cachorros filtrados
+    return render(request, 'adocao/lista_cachorro.html', {'cachorros': cachorros})

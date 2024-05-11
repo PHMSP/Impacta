@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Lista de Animais para Adoção</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f0f0f0;
+        }
+
+        h1 {
+            text-align: center;
+            color: #333;
+        }
+
+        form {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        form label {
+            margin-right: 10px;
+        }
+
+        form input[type="text"] {
+            padding: 5px;
+            border-radius: 5px;
+            border: 1px solid #ccc;
+        }
+
+        form button {
+            padding: 5px 10px;
+            border-radius: 5px;
+            background-color: #007bff;
+            color: #fff;
+            border: none;
+            cursor: pointer;
+        }
+
+        ul {
+            list-style-type: none;
+            padding: 0;
+            margin: 0;
+        }
+
+        li {
+            background-color: #fff;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            padding: 20px;
+            margin-bottom: 20px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        .animal-info {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 10px;
+        }
+
+        .animal-info div {
+            flex: 1;
+        }
+
+        .animal-info strong {
+            font-weight: bold;
+        }
+
+        .doador-info {
+            border-top: 1px solid #ccc;
+            padding-top: 10px;
+        }
+    </style>
+</head>
+
+<body>
+    <h1>Lista de Animais para Adoção</h1>
+    <form method="GET">
+        <label for="estado">Estado:</label>
+        <input type="text" id="estado" name="estado">
+        <label for="cidade">Cidade:</label>
+        <input type="text" id="cidade" name="cidade">
+        <button type="submit">Filtrar</button>
+    </form>
+    {% if estado and cidade %}
+    <p>Resultado da busca para o estado: {{ estado }} e cidade: {{ cidade }}</p>
+    {% endif %}
+    <ul>
+        {% for cachorro in cachorros %}
+        <li>
+            <div class="animal-info">
+                <div>
+                    <strong>Raça:</strong> {{ cachorro.raca }}<br>
+                    <strong>Idade:</strong> {{ cachorro.idade }} anos<br>
+                    <strong>Gênero:</strong> {{ cachorro.genero }}<br>
+                </div>
+                <div>
+                    <strong>Descrição:</strong> {{ cachorro.descricao }}<br>
+                </div>
+            </div>
+            <div class="doador-info">
+                <strong>Doador:</strong> {{ cachorro.doador.nome }}<br>
+                <strong>Email:</strong> {{ cachorro.doador.email }}<br>
+                <strong>Telefone:</strong> {{ cachorro.doador.telefone }}<br>
+            </div>
+        </li>
+        {% endfor %}
+    </ul>
+</body>
+
+</html>
