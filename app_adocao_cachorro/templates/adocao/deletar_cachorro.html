@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Deletar Cachorro</title>
+</head>
+
+<body>
+    <h1>Deletar Cachorro</h1>
+    <form method="post">
+        {% csrf_token %}
+        <label for="email">Email:</label>
+        <input type="email" id="email" name="email">
+        <br>
+        <label for="telefone">Telefone:</label>
+        <input type="text" id="telefone" name="telefone">
+        <br>
+        <button type="submit">Buscar</button>
+    </form>
+    {% if cachorros %}
+    <h2>Cachorros cadastrados pelo doador:</h2>
+    <ul>
+        {% for cachorro in cachorros %}
+        <li> {{ cachorro.id }} - {{ cachorro.raca }} - {{ cachorro.idade }} anos - {{ cachorro.descricao }} -
+            {{ cachorro.genero }}
+        </li>
+        {% endfor %}
+    </ul>
+    <form method="post">
+        {% csrf_token %}
+        <input type="hidden" name="email" value="{{ doador.email }}">
+        <input type="hidden" name="telefone" value="{{ doador.telefone }}">
+        <label for="cachorro_id">Selecione o ID do cachorro a ser deletado:</label>
+        <select name="cachorro_id">
+            {% for cachorro in cachorros %}
+            <option value="{{ cachorro.id }}">{{ cachorro.id }}</option>
+            {% endfor %}
+        </select>
+        <button type="submit">Deletar</button>
+    </form>
+    <a href="{% url 'home' %}">Voltar para o início</a>
+    {% endif %}
+    {% if error_message %}
+    <p>{{ error_message }}</p>
+    {% endif %}
+
+
+</body>
+
+</html>

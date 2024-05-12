@@ -1,7 +1,9 @@
-from django.shortcuts import render, redirect
-from .models import Doador  # Importe o modelo Doador
-from .models import Cachorro # Importe o modelo Cachorro
+import requests
+from django.shortcuts import render, redirect, get_object_or_404
+from .models import Doador, Cachorro
 from django.contrib import messages
+from django.http import HttpResponseRedirect
+from django.urls import reverse
 
 def home(request):
     return render(request, 'adocao/home.html')
@@ -45,14 +47,56 @@ def cadastro_cachorro(request):
         return redirect('home')
     else:
         return render(request, 'adocao/cadastro_cachorro.html')
-    
+
 def lista_cachorro(request):
-    # Obtém os parâmetros de filtro do request
     estado = request.GET.get('estado')
     cidade = request.GET.get('cidade')
 
-    # Filtra os cachorros com base nos parâmetros de filtro
-    cachorros = Cachorro.objects.filter(estado=estado, cidade=cidade)
+    if estado and cidade:
+        cachorros = Cachorro.objects.filter(estado=estado, cidade=cidade)
+    else:
+        cachorros = Cachorro.objects.all()
 
-    # Renderiza o template com os cachorros filtrados
-    return render(request, 'adocao/lista_cachorro.html', {'cachorros': cachorros})
+    # Buscar URLs das imagens dos cachorros na API The Dog API
+    for cachorro in cachorros:
+        cachorro.imagem_url = get_imagem_url()
+
+    return render(request, 'adocao/lista_cachorro.html', {'cachorros': cachorros, 'estado': estado, 'cidade': cidade})
+
+def get_imagem_url():
+    headers = {
+        "Content-Type": "application/json",
+        "x-api-key": "live_vRgCbdWFDsEV5ZC1MpHXYn9iaRJLy7zbDXac5hARGvICeIdt5tQKokFkgOT8WAXx"
+    }
+    response = requests.get("https://api.thedogapi.com/v1/images/search?size=med&mime_types=jpg&format=json&has_breeds=true&order=RANDOM&page=0&limit=1", headers=headers)
+    if response.status_code == 200:
+        data = response.json()
+        if data and 'url' in data[0]:
+            return data[0]['url']
+    return None
+
+def deletar_cachorro(request):
+    if request.method == 'POST':
+        email = request.POST.get('email')
+        telefone = request.POST.get('telefone')
+
+        try:
+            doador = Doador.objects.get(email=email, telefone=telefone)
+            cachorros = Cachorro.objects.filter(doador=doador)
+            if 'cachorro_id' in request.POST:
+                cachorro_id = request.POST.get('cachorro_id')
+                # Verificar se o cachorro com o ID fornecido pertence ao doador
+                cachorro = cachorros.filter(id=cachorro_id).first()
+                if cachorro:
+                    cachorro.delete()
+                    messages.success(request, 'Cachorro deletado com sucesso.')
+                    return redirect('home')
+                else:
+                    error_message = 'Cachorro não encontrado ou não pertence a este doador.'
+                    return render(request, 'adocao/deletar_cachorro.html', {'error_message': error_message})
+            return render(request, 'adocao/deletar_cachorro.html', {'cachorros': cachorros, 'doador': doador})
+        except Doador.DoesNotExist:
+            error_message = 'Doador não encontrado. Verifique o e-mail e telefone fornecidos.'
+            return render(request, 'adocao/deletar_cachorro.html', {'error_message': error_message})
+
+    return render(request, 'adocao/deletar_cachorro.html')

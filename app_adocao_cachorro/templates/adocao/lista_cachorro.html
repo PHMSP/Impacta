@@ -91,6 +91,7 @@
     <ul>
         {% for cachorro in cachorros %}
         <li>
+            <img src="{{ cachorro.imagem_url }}" alt="Imagem do Cachorro" style="max-width: 200px;">
             <div class="animal-info">
                 <div>
                     <strong>Raça:</strong> {{ cachorro.raca }}<br>
